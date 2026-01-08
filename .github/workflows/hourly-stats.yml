@@ -1,0 +1,31 @@
+name: Hourly Contribution Update
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # 🔁 every hour
+  workflow_dispatch:      # manual trigger support
+
+jobs:
+  update-hourly-stats:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+
+      - name: Generate hourly stats
+        run: node .github/scripts/hourly-stats.js
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "MustafaPinjari"
+          git config user.email "unlessuser99@gmail.com"
+
+          git add contrib.json
+          git commit -m "chore: hourly activity update $(date -u '+%Y-%m-%d %H:%M UTC')" || exit 0
+          git push

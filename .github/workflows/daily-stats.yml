@@ -1,0 +1,17 @@
+name: Update Daily Stats
+
+on:
+  schedule:
+    - cron: "0 0 * * *"   # every day at 00:00 UTC
+
+jobs:
+  update-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Run daily stats
+        run: node .github/scripts/daily-stats.js
